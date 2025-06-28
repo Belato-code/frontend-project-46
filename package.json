@@ -1,0 +1,32 @@
+{
+  "name": "@hexlet/code",
+  "version": "1.0.0",
+  "description": "[![Actions Status](https://github.com/Belato-code/frontend-project-46/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/Belato-code/frontend-project-46/actions)",
+  "homepage": "https://github.com/Belato-code/frontend-project-46#readme",
+  "bin": {
+    "gendiff": "bin/gendiff.js"
+  },
+  "bugs": {
+    "url": "https://github.com/Belato-code/frontend-project-46/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Belato-code/frontend-project-46.git"
+  },
+  "license": "ISC",
+  "author": "Belato",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "commander": "^14.0.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.30.0",
+    "@stylistic/eslint-plugin": "^5.0.0",
+    "eslint": "^9.30.0",
+    "typescript-eslint": "^8.35.0"
+  }
+}
