@@ -3,13 +3,14 @@ import { cwd } from 'node:process'
 import fs from 'node:fs'
 import _ from 'lodash'
 
-const makePath = filePath => path.resolve(cwd(), filePath)
 const getDifferencies = (path1, path2) => {
   const file1 = JSON.parse(fs.readFileSync(makePath(path1), 'utf8'))
   const file2 = JSON.parse(fs.readFileSync(makePath(path2), 'utf8'))
-  const stringsOfDiff = genDiff(file1, file2)
+  const stringsOfDiff = genDiff(file1, file2).split(',')
   return `{\n${stringsOfDiff.join('\n')}\n}`
 }
+
+const makePath = filePath => path.resolve(cwd(), filePath)
 
 // Make function for finding differencies between two objects
 const genDiff = (data1, data2) => {
@@ -33,7 +34,7 @@ const genDiff = (data1, data2) => {
     }
   }
 
-  return _.compact(result.split(','))
+  return result
 }
 
 export default getDifferencies
