@@ -1,6 +1,11 @@
 # Игнорировать папку с модулями
 node_modules/
+
 # Настройки редактора
 .vscode/
+
 # Пропускаем файлы с расширением .cast
-*.cast 
+*.cast
+
+# ignore coverage
+coverage
