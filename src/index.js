@@ -7,8 +7,10 @@ const getDifferencies = (path1, path2) => {
   const file1 = JSON.parse(fs.readFileSync(makePath(path1), 'utf8'))
   const file2 = JSON.parse(fs.readFileSync(makePath(path2), 'utf8'))
   const diffLines = _.compact(genDiff(file1, file2).split(','))
-    .map(string => string.replace(',', ''))
-  return `{\n${diffLines.map(line => `  ${line}`).join('\n')}\n}`
+    .map(line => line.replace(',', ''))
+    .map(line => `  ${line}`)
+
+  return `{\n${diffLines.join('\n')}\n}`
 }
 
 const makePath = filePath => path.resolve(cwd(), filePath)

@@ -17,8 +17,8 @@ test('Find differencies', () => {
     '+ timeout: 20',
     '+ verbose: true',
   ]
-
-  const expected = `{\n${strings.map(item => `  ${item}`).join('\n')}\n}`
+  const lines = strings.map(item => `  ${item}`).join('\n')
+  const expected = `{\n${lines}\n}`
   const path1 = getFixturePath('file1.json')
   const path2 = getFixturePath('file2.json')
 
