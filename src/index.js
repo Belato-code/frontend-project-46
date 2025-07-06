@@ -1,9 +1,8 @@
 import path from 'node:path'
-import fs from 'node:fs'
 import _ from 'lodash'
-import { cwd } from 'node:process'
 import { fileURLToPath } from 'url'
 import { dirname } from 'path'
+import makeParse from './parsers.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -11,16 +10,14 @@ const __dirname = dirname(__filename)
 export const getFixturePath = filename => path.join(__dirname, '..', '__fixtures__', filename)
 
 const getDifferencies = (path1, path2) => {
-  const file1 = JSON.parse(fs.readFileSync(makePath(path1), 'utf8'))
-  const file2 = JSON.parse(fs.readFileSync(makePath(path2), 'utf8'))
+  const file1 = makeParse(path1)
+  const file2 = makeParse(path2)
   const diffLines = _.compact(genDiff(file1, file2).split(','))
     .map(line => line.replace(',', ''))
     .map(line => `  ${line}`)
 
   return `{\n${diffLines.join('\n')}\n}`
 }
-
-const makePath = filePath => path.resolve(cwd(), filePath)
 
 // Make function for finding differencies between two objects
 const genDiff = (data1, data2) => {
