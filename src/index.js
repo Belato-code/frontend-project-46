@@ -1,26 +1,23 @@
 import _ from 'lodash'
 import makeParse from './parsers.js'
-import stylish from './formaters/stylish.js'
 import path from 'node:path'
 import { fileURLToPath } from 'url'
 import { dirname } from 'path'
+import formater from './formaters/index.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 export const getFixturePath = filename => path.join(__dirname, '..', '__fixtures__', filename)
 
 const getDiff = (path1, path2, format = 'stylish') => {
-  const formats = {
-    stylish: stylish,
-  }
   const file1 = makeParse(path1)
   const file2 = makeParse(path2)
 
-  return formats[format](genDiff(file1, file2))
+  return formater(format)(genDiff(file1, file2))
 }
 
 const genDiff = (file1, file2) => {
-  const makeDiff = (data1, data2, path) => {
+  const inner = (data1, data2, path) => {
     const keys1 = Object.keys(data1)
     const keys2 = Object.keys(data2)
     const keys = _.union(keys1, keys2).sort()
@@ -30,7 +27,7 @@ const genDiff = (file1, file2) => {
       const value2 = data2[key]
 
       if (_.isPlainObject(value1) && _.isPlainObject(value2)) {
-        const children = makeDiff(value1, value2, currentPath)
+        const children = inner(value1, value2, currentPath)
         return {
           key,
           children,
@@ -73,7 +70,7 @@ const genDiff = (file1, file2) => {
 
     return result
   }
-  return makeDiff(file1, file2, '')
+  return inner(file1, file2, '')
 }
 
 export default getDiff
