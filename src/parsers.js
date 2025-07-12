@@ -1,8 +1,9 @@
 import fs from 'fs'
 import path from 'path'
 import yaml from 'js-yaml'
-import { makePath } from './index.js'
+import { cwd } from 'process'
 
+const makePath = fileName => path.resolve(cwd(), fileName)
 const parsers = {
   '.json': JSON.parse,
   '.yaml': yaml.load,

@@ -2,11 +2,9 @@ import _ from 'lodash'
 import makeParse from './parsers.js'
 import stylish from './formaters/stylish.js'
 import path from 'node:path'
-import { cwd } from 'process'
 import { fileURLToPath } from 'url'
 import { dirname } from 'path'
 
-export const makePath = fileName => path.resolve(cwd(), fileName)
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 export const getFixturePath = filename => path.join(__dirname, '..', '__fixtures__', filename)
