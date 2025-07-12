@@ -1,14 +1,14 @@
 import fs from 'fs'
 import path from 'path'
-import { cwd } from 'process'
 import yaml from 'js-yaml'
+import { makePath } from './index.js'
 
 const parsers = {
   '.json': JSON.parse,
   '.yaml': yaml.load,
   '.yml': yaml.load,
 }
-const makePath = fileName => path.resolve(cwd(), fileName)
+
 export default function makeParse(fileName) {
   const extention = path.extname(fileName)
   if (Object.hasOwn(parsers, extention)) {
