@@ -24,13 +24,13 @@ const stylish = (diffTree) => {
 
       switch (status) {
         case 'nested':
-          return `${nodeIndent}${key}: ${iter(node.children, depth + 1)}`
+          return [`${nodeIndent}${key}: ${iter(node.children, depth + 1)}`]
         case 'added':
-          return `${currentIndent}+ ${key}: ${stringify(node.value, depth + 1)}`
+          return [`${currentIndent}+ ${key}: ${stringify(node.value, depth + 1)}`]
         case 'removed':
-          return `${currentIndent}- ${key}: ${stringify(node.value, depth + 1)}`
+          return [`${currentIndent}- ${key}: ${stringify(node.value, depth + 1)}`]
         case 'unchanged':
-          return `${currentIndent}  ${key}: ${stringify(node.value, depth + 1)}`
+          return [`${currentIndent}  ${key}: ${stringify(node.value, depth + 1)}`]
         case 'changed':
           return [
             `${currentIndent}- ${key}: ${stringify(node.oldValue, depth + 1)}`,
