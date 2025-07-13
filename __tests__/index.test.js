@@ -26,3 +26,17 @@ test('Format plain', () => {
   expect(getDiff(path1, path2, 'plain')).toBe(expected)
   expect(() => getDiff(path1, path2, 'random')).toThrow()
 })
+
+test('Format json', () => {
+  function isJSON(string) {
+    try {
+      JSON.parse(string)
+      return true
+    }
+    catch {
+      return false
+    }
+  }
+
+  expect(isJSON(getDiff(path1, path2, 'json'))).toBeTruthy()
+})

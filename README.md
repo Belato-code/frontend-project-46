@@ -5,6 +5,10 @@
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=Belato-code_frontend-project-46&metric=coverage)](https://sonarcloud.io/summary/new_code?id=Belato-code_frontend-project-46)
 [![asciicast](https://asciinema.org/a/9zjLEMz98F0syt2H0ZDbq2NqH.svg)](https://asciinema.org/a/9zjLEMz98F0syt2H0ZDbq2NqH)
 
+## Json format
+
+[![asciicast](https://asciinema.org/a/tmPqHbV0uxIftQKJ6Mup57VWg.svg)](https://asciinema.org/a/tmPqHbV0uxIftQKJ6Mup57VWg)
+
 ## Setup
 
 ```bash
