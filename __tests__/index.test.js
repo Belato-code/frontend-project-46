@@ -2,41 +2,30 @@ import getDiff from '../src/index.js'
 import fs from 'fs'
 import { test, expect } from '@jest/globals'
 import { getFixturePath } from '../src/index.js'
+import stylish from '../src/formaters/stylish.js'
+import plain from '../src/formaters/plain.js'
+import parse from '../src/parsers.js'
 
 const path1 = getFixturePath('filepath1.json')
 const path2 = getFixturePath('filepath2.yml')
+const path3 = getFixturePath('filepath3.yml')
+const expectedStylish = fs.readFileSync(getFixturePath('expectedStylish.txt'), 'utf-8')
+const expectedPlain = fs.readFileSync(getFixturePath('expectedPlain.txt'), 'utf-8')
+const expectedJson = fs.readFileSync(getFixturePath('expected.json'), 'utf-8')
 
-test('Find differencies of JSON files', () => {
-  const expected = fs.readFileSync(getFixturePath('expected_filepath.txt'), 'utf-8')
-
-  expect(getDiff(path1, path2)).toBe(expected)
+test.each`
+    format     | expected
+    ${'stylish'} | ${expectedStylish}
+    ${'plain'}   | ${expectedPlain}
+    ${'json'}    | ${expectedJson}
+  `('Right format $format', ({ format, expected }) => {
+  expect(getDiff(path1, path2, format)).toEqual(expected)
 })
 
-test('Find differencies of YAML files', () => {
-  const path = getFixturePath('file3.txta')
-  const expected = fs.readFileSync(getFixturePath('expected_filepath.txt'), 'utf-8')
-
-  expect(() => getDiff(path, path1)).toThrow()
-  expect(getDiff(path1, path2)).toBe(expected)
-})
-
-test('Format plain', () => {
-  const expected = fs.readFileSync(getFixturePath('plain.txt'), 'utf-8')
-
-  expect(getDiff(path1, path2, 'plain')).toBe(expected)
-  expect(() => getDiff(path1, path2, 'random')).toThrow()
-})
-
-test('Format json', () => {
-  function isJSON(string) {
-    try {
-      JSON.parse(string)
-      return true
-    }
-    catch {
-      return false
-    }
-  }
-
-  expect(isJSON(getDiff(path1, path2, 'json'))).toBeTruthy()
+test('Throw error', () => {
+  expect(() => getDiff(path2, path1, 'test')).toThrow()
+  expect(() => getDiff(path2, path3)).toThrow()
+  expect(() => plain([{ key: 'key', status: 'new', value: 'value1' }])).toThrow()
+  expect(() => stylish([{ key: 'key', status: 'new', value: 'value1' }])).toThrow()
+  expect(() => parse({ key: 'key', status: 'new', value: 'value1' }, '.xmlxs')).toThrow()
 })
