@@ -1,47 +1,44 @@
 import _ from 'lodash'
 
+const indent = (depth, subtractor = 0, replacer = ' ', spacesCount = 4) => replacer.repeat(depth * spacesCount - subtractor)
+
 const stringify = (data, depth = 1) => {
   if (!_.isObject(data) || data === null) {
     return String(data)
   }
 
-  const indent = ' '.repeat(4 * (depth + 1) - 4)
-  const closingIndent = ' '.repeat(4 * depth - 4)
+  const lineIndent = indent(depth)
+  const closingIndent = indent(depth, 4)
   const lines = Object.entries(data).map(([key, value]) => {
-    return `${indent}${key}: ${stringify(value, depth + 1)}`
+    return `${lineIndent}${key}: ${stringify(value, depth + 1)}`
   })
 
   return ['{', ...lines, `${closingIndent}}`].join('\n')
 }
 
 const stylish = (diffTree) => {
-  const iter = (nodes, depth = 1) => {
-    const indent = ' '.repeat(4 * depth - 4)
-    const nodeIndent = ' '.repeat(4 * depth)
-    const currentIndent = ' '.repeat(4 * depth - 2)
-    const lines = nodes.flatMap((node) => {
-      const { key, status } = node
+  const dispatcher = {
+    added: (node, depth) => [`${indent(depth, 2)}+ ${node.key}: ${stringify(node.value, depth + 1)}`],
+    removed: (node, depth) => [`${indent(depth, 2)}- ${node.key}: ${stringify(node.value, depth + 1)}`],
+    changed: (node, depth) => [
+      `${indent(depth, 2)}- ${node.key}: ${stringify(node.oldValue, depth + 1)}`,
+      `${indent(depth, 2)}+ ${node.key}: ${stringify(node.newValue, depth + 1)}`,
+    ],
+    unchanged: (node, depth) => [`${indent(depth, 2)}  ${node.key}: ${stringify(node.value, depth + 1)}`],
+    nested: (node, depth) => [`${indent(depth)}${node.key}: ${iter(node.children, depth + 1)}`],
+  }
 
-      switch (status) {
-        case 'nested':
-          return `${nodeIndent}${key}: ${iter(node.children, depth + 1)}`
-        case 'added':
-          return [`${currentIndent}+ ${key}: ${stringify(node.value, depth + 1)}`]
-        case 'removed':
-          return [`${currentIndent}- ${key}: ${stringify(node.value, depth + 1)}`]
-        case 'unchanged':
-          return [`${currentIndent}  ${key}: ${stringify(node.value, depth + 1)}`]
-        case 'changed':
-          return [
-            `${currentIndent}- ${key}: ${stringify(node.oldValue, depth + 1)}`,
-            `${currentIndent}+ ${key}: ${stringify(node.newValue, depth + 1)}`,
-          ]
-        default:
-          throw new Error(`Unknown status: ${status}`)
+  const iter = (nodes, depth = 1) => {
+    const closingIndent = indent(depth, 4)
+    const lines = nodes.flatMap((node) => {
+      const handler = dispatcher[node.status]
+      if (!handler) {
+        throw new Error(`No such status: ${node.status}`)
       }
+      return handler(node, depth)
     })
 
-    return ['{', ...lines, `${indent}}`].join('\n')
+    return ['{', ...lines, `${closingIndent}}`].join('\n')
   }
 
   return iter(diffTree)
